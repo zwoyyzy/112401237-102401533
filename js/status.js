@@ -39,7 +39,7 @@
         document.querySelector("[data-status-message]").textContent = "状态更新失败，请重试。";
         return;
       }
-      window.location.href = "./my-posts.html";
+      window.location.href = "./profile.html";
     });
   }
 

@@ -9,7 +9,7 @@
 - 设计失物招领数据结构。
 - 实现统一的 `localStorage` 数据存储。
 - 实现发布信息页面、表单校验和发布成功页面。
-- 实现“我的”页面和“我的发布”页面。
+- 实现“我的”页面及其中的完整发布列表。
 - 实现信息状态修改。
 - 将寻物信息标记为“已找到”。
 - 将招领信息标记为“已归还”。
@@ -28,7 +28,6 @@
 │   ├── publish.html
 │   ├── publish-success.html
 │   ├── profile.html
-│   ├── my-posts.html
 │   └── status.html
 ├── css/
 │   ├── common.css
@@ -50,7 +49,6 @@
 pages/publish.html
 pages/publish-success.html
 pages/profile.html
-pages/my-posts.html
 pages/status.html
 css/publish.css
 css/profile.css
@@ -203,7 +201,6 @@ pages/detail.html?id=物品ID               信息详情
 pages/publish.html                       发布信息
 pages/publish-success.html?id=ID         发布成功
 pages/profile.html                      我的
-pages/my-posts.html                     我的发布
 pages/status.html?id=ID                 修改状态
 ```
 
@@ -212,7 +209,6 @@ pages/status.html?id=ID                 修改状态
 ```js
 location.href = `./publish-success.html?id=${item.id}`;
 location.href = `./detail.html?id=${item.id}`;
-location.href = "./my-posts.html";
 location.href = `./status.html?id=${item.id}`;
 ```
 
@@ -238,7 +234,7 @@ location.href = `./status.html?id=${item.id}`;
 </body>
 ```
 
-`profile.html`、`my-posts.html` 和 `status.html` 使用 `profile.css`。CSS 顺序统一为：公共样式、设计变量、页面专属样式。
+`profile.html` 和 `status.html` 使用 `profile.css`。CSS 顺序统一为：公共样式、设计变量、页面专属样式。
 
 手机画布统一按 `390 × 844` 设计，在桌面 Chrome 中居中显示。必须使用现有变量：
 
@@ -296,16 +292,16 @@ var(--ui-card-shadow)
 - “返回首页”按钮：`../index.html`。
 - 不显示底部导航。
 
-## 11. 我的、我的发布和状态页
+## 11. 我的和状态页
 
-文件：`pages/profile.html`、`pages/my-posts.html`、`pages/status.html`、`js/profile.js`、`js/status.js`、`css/profile.css`。
+文件：`pages/profile.html`、`pages/status.html`、`js/profile.js`、`js/status.js`、`css/profile.css`。
 
 `profile.html` 按原型实现：
 
 - 用户头像和基本信息。
 - 全部、进行中、已完成数量统计。
 - 我的发布、我的收藏、我的评论、归还记录入口。
-- 发布信息预览列表。
+- 按发布时间从新到旧展示当前用户的全部发布信息。
 - 统一底部导航：首页 / 发布 / 我的。
 
 数据调用：
@@ -315,8 +311,6 @@ CampusData.getMyItems("current-user")
 CampusData.getMyFavorites("current-user")
 CampusData.getMyComments("current-user")
 ```
-
-`my-posts.html` 显示当前用户发布的全部信息，支持进入 `./status.html?id=物品ID`。没有内容时显示空状态。
 
 `status.html` 只允许当前用户修改自己的信息：
 
@@ -331,7 +325,7 @@ CampusData.getMyComments("current-user")
 CampusData.updateStatus(id, "completed");
 ```
 
-成功后跳转 `./my-posts.html`。是否允许从 `completed` 恢复 `active`，需要团队提前约定；默认不提供恢复操作。
+成功后跳转 `./profile.html`。是否允许从 `completed` 恢复 `active`，需要团队提前约定；默认不提供恢复操作。
 
 ## 12. 底部导航
 
@@ -341,7 +335,6 @@ CampusData.updateStatus(id, "completed");
 index.html
 pages/publish.html
 pages/profile.html
-pages/my-posts.html
 pages/status.html
 ```
 

@@ -127,7 +127,6 @@
       dialog.hidden = true;
       pendingId = "";
       renderProfile();
-      renderMyPosts();
     };
     dialog.addEventListener("click", function (event) { if (event.target === dialog) cancel.click(); });
   }
@@ -166,17 +165,6 @@
     bindDeleteActions();
   }
 
-  function renderMyPosts() {
-    var list = document.querySelector("[data-my-posts-list]");
-    if (!list || !window.CampusData) return;
-    var items = getItems();
-    var count = document.querySelector("[data-post-count]");
-    if (count) count.textContent = items.length + " 条";
-    list.innerHTML = items.map(function (item) { return card(item, true); }).join("") || "<p class=\"empty-state\">还没有发布信息</p>";
-    bindDeleteActions();
-  }
-
-  window.MemberBProfile = { renderProfile: renderProfile, renderMyPosts: renderMyPosts };
+  window.MemberBProfile = { renderProfile: renderProfile };
   renderProfile();
-  renderMyPosts();
 })();

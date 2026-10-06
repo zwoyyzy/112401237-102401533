@@ -115,7 +115,7 @@
   }
 
   function getItemTime(item) {
-    return CampusData.getItemTimestamp(item);
+    return CampusData.getItemDayTimestamp(item);
   }
 
   function timeMatches(item, value) {
