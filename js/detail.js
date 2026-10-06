@@ -4,10 +4,27 @@
   const id = params.get("id") || "seed-id-card-found";
   const detailBack = document.querySelector(".detail-back");
   if (params.get("from") === "home" && detailBack) {
-    const homeUrl = new URL("../index.html", window.location.href);
-    const category = params.get("category");
-    if (category && category !== "all") homeUrl.searchParams.set("category", category);
-    detailBack.href = `${homeUrl.pathname}${homeUrl.search}`;
+    const returnUrl = params.get("return");
+    try {
+      const homeUrl = new URL(returnUrl, window.location.href);
+      const isHomePath = homeUrl.pathname.endsWith("/index.html") || homeUrl.pathname.endsWith("/");
+      if (homeUrl.origin === window.location.origin && isHomePath) {
+        detailBack.href = `${homeUrl.pathname}${homeUrl.search}${homeUrl.hash}`;
+      }
+    } catch (error) {
+      // Keep browser history fallback when the return URL is unavailable.
+    }
+  }
+  if (params.get("from") === "search" && detailBack) {
+    const returnUrl = params.get("return");
+    try {
+      const searchUrl = new URL(returnUrl, window.location.href);
+      if (searchUrl.origin === window.location.origin && searchUrl.pathname.endsWith("/search.html")) {
+        detailBack.href = `${searchUrl.pathname}${searchUrl.search}${searchUrl.hash}`;
+      }
+    } catch (error) {
+      // Keep browser history fallback when the return URL is unavailable.
+    }
   }
   const initialItem = CampusData.getItemById(id);
   const toast = document.getElementById("copy-toast");

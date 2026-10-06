@@ -21,6 +21,38 @@
   const SEARCH_HISTORY_KEY = "campus-lost-found-search-history";
 
   keyword.value = params.get("keyword") || "";
+  filters.sort = params.get("sort") || "default";
+  filters.time = params.get("time") || "all";
+  filters.type = params.get("type") || "all";
+  filters.status = params.get("status") || "all";
+  filters.location = (params.get("location") || "").split(",").filter(Boolean);
+
+  function syncFilterUrl() {
+    const url = new URL(window.location.href);
+    if (keyword.value.trim()) url.searchParams.set("keyword", keyword.value.trim());
+    else url.searchParams.delete("keyword");
+
+    ["sort", "time", "type", "status"].forEach(name => {
+      if (filters[name] === "default" || filters[name] === "all") url.searchParams.delete(name);
+      else url.searchParams.set(name, filters[name]);
+    });
+    if (filters.location.length) url.searchParams.set("location", filters.location.join(","));
+    else url.searchParams.delete("location");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  }
+
+  function syncFilterControls() {
+    document.querySelectorAll(".chip-group").forEach(group => {
+      const name = group.dataset.filterGroup;
+      group.querySelectorAll(".chip").forEach(chip => {
+        const value = chip.dataset.value;
+        const active = name === "location"
+          ? (filters.location.length ? filters.location.includes(value) : value === "all")
+          : filters[name] === value;
+        chip.classList.toggle("active", active);
+      });
+    });
+  }
 
   function readSearchHistory() {
     try {
@@ -198,13 +230,13 @@
   filterScrim.addEventListener("click", () => setOverlay(false));
   confirmFilter.addEventListener("click", () => {
     setOverlay(false);
+    syncFilterUrl();
     render();
   });
   resetFilters.addEventListener("click", () => {
     Object.assign(filters, { sort: "default", time: "all", type: "all", status: "all", location: [] });
-    document.querySelectorAll(".chip-group").forEach(group => {
-      group.querySelectorAll(".chip").forEach((chip, index) => chip.classList.toggle("active", index === 0));
-    });
+    syncFilterControls();
+    syncFilterUrl();
     render();
   });
 
@@ -232,5 +264,6 @@
     }));
   });
 
+  syncFilterControls();
   render();
 })();
