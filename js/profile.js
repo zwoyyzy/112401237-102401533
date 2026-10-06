@@ -3,12 +3,18 @@
 
   var USER_ID = "current-user";
   var PROFILE_KEY = "campus-lost-found-profile";
-  var DEFAULT_PROFILE = { name: "林同学", university: "福州大学", college: "信息学院", grade: "2024级" };
+  var DEFAULT_AVATAR = "../assets/default-profile-avatar.png";
+  var DEFAULT_PROFILE = { name: "小同学", university: "福州大学", college: "计算机与大数据学院", grade: "2024级" };
 
   function readProfile() {
     try {
       var saved = JSON.parse(window.localStorage.getItem(PROFILE_KEY) || "{}");
-      return Object.assign({}, DEFAULT_PROFILE, saved);
+      var profile = Object.assign({}, DEFAULT_PROFILE, saved);
+      if (!profile.college || profile.college === "信息学院") {
+        profile.college = DEFAULT_PROFILE.college;
+        window.localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+      }
+      return profile;
     } catch (error) {
       return Object.assign({}, DEFAULT_PROFILE);
     }
@@ -21,7 +27,10 @@
     var university = document.querySelector("[data-profile-university]");
     var college = document.querySelector("[data-profile-college]");
     var grade = document.querySelector("[data-profile-grade]");
-    if (avatar) avatar.textContent = String(profile.name || DEFAULT_PROFILE.name).trim().charAt(0) || "林";
+    if (avatar) {
+      avatar.src = profile.avatar || DEFAULT_AVATAR;
+      avatar.alt = profile.name ? profile.name + "的头像" : "默认头像";
+    }
     if (name) name.textContent = profile.name || DEFAULT_PROFILE.name;
     if (university) university.textContent = profile.university || DEFAULT_PROFILE.university;
     if (college) college.textContent = profile.college || DEFAULT_PROFILE.college;
@@ -70,10 +79,12 @@
     var action = withAction ? "<div class=\"post-actions\"><a class=\"post-action\" href=\"./status.html?id=" + encodeURIComponent(item.id) + "\">修改状态</a><a class=\"post-edit\" href=\"./edit-post.html?id=" + encodeURIComponent(item.id) + "\">编辑</a><button class=\"post-delete\" type=\"button\" data-delete-item=\"" + escapeHtml(item.id) + "\">删除</button></div>" : "";
     var statusClass = item.status === "completed" ? "completed" : "active";
     var firstImage = Array.isArray(item.images) && item.images.length ? item.images[0] : "";
-    var visual = firstImage
-      ? "<img class=\"post-icon-image\" src=\"" + escapeHtml(firstImage) + "\" alt=\"" + escapeHtml(item.name) + "图片\">"
+    var firstImageUrl = CampusData.getImageUrl(firstImage);
+    var displayDate = CampusData.formatItemDate(item);
+    var visual = firstImageUrl
+      ? "<img class=\"post-icon-image\" src=\"" + escapeHtml(firstImageUrl) + "\" alt=\"" + escapeHtml(item.name) + "图片\">"
       : "<svg class=\"default-item-cube\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><path d=\"m24 6 16 9-16 9-16-9 16-9Z\"/><path d=\"M8 15v18l16 9 16-9V15\"/><path d=\"M24 24v18\"/></svg>";
-    return "<article class=\"post-card\"><a class=\"post-detail-link\" href=\"" + detailHref + "\"><div class=\"post-icon " + escapeHtml(item.imageClass || "icon-blue") + "\" aria-hidden=\"true\">" + visual + "</div><div class=\"post-copy\"><div class=\"post-meta\"><span>" + typeLabel(item) + "</span><strong class=\"" + statusClass + "\">" + statusLabel(item) + "</strong></div><h3>" + escapeHtml(item.name) + "</h3><p>" + escapeHtml(item.date) + " · " + escapeHtml(item.location) + "</p></div></a>" + action + "</article>";
+    return "<article class=\"post-card\"><a class=\"post-detail-link\" href=\"" + detailHref + "\"><div class=\"post-icon " + escapeHtml(item.imageClass || "icon-blue") + "\" aria-hidden=\"true\">" + visual + "</div><div class=\"post-copy\"><div class=\"post-meta\"><span>" + typeLabel(item) + "</span><strong class=\"" + statusClass + "\">" + statusLabel(item) + "</strong></div><h3>" + escapeHtml(item.name) + "</h3><p>" + escapeHtml(displayDate) + " · " + escapeHtml(item.location) + "</p></div></a>" + action + "</article>";
   }
 
   function ensureDeleteDialog() {

@@ -1,7 +1,7 @@
 (function () {
   const container = document.getElementById("detail-content");
   const params = new URLSearchParams(window.location.search);
-  const id = params.get("id") || "lost-card-001";
+  const id = params.get("id") || "seed-id-card-found";
   const detailBack = document.querySelector(".detail-back");
   if (params.get("from") === "home" && detailBack) {
     const homeUrl = new URL("../index.html", window.location.href);
@@ -41,8 +41,22 @@
   const categoryLabel = item.category;
   const publisherName = String(item.publisher || "");
   const contactText = item.contact || "暂无联系方式";
+  const displayDate = CampusData.formatItemDate(item);
+  const isCurrentUser = item.publisherId === "current-user";
+  let publisherAvatar = "../assets/default-profile-avatar.png";
+  if (isCurrentUser) {
+    try {
+      const profile = JSON.parse(window.localStorage.getItem("campus-lost-found-profile") || "{}");
+      if (profile && typeof profile.avatar === "string" && profile.avatar.trim()) publisherAvatar = profile.avatar.trim();
+    } catch (error) {
+      // Keep the same default avatar used by the profile page.
+    }
+  }
+  const publisherAvatarMarkup = isCurrentUser
+    ? `<img class="publisher-avatar" src="${escapeHtml(publisherAvatar)}" alt="${escapeHtml(publisherName)}的头像">`
+    : `<span class="publisher-avatar" aria-hidden="true">${escapeHtml(publisherName.slice(0, 1))}</span>`;
   const images = Array.isArray(item.images)
-    ? item.images.filter(image => typeof image === "string" && image.trim()).slice(0, 3)
+    ? item.images.map(CampusData.getImageUrl).filter(Boolean).slice(0, 3)
     : [];
   const galleryMarkup = images.length
     ? `<img class="detail-gallery-image" data-gallery-image src="${escapeHtml(images[0])}" alt="${escapeHtml(item.name)}图片 1">${images.length > 1 ? `
@@ -70,13 +84,12 @@
         <span>${item.description}</span>
       </section>
       <section class="detail-info">
-        <div class="info-item time"><div><small>丢失时间</small><strong>${item.date}</strong></div></div>
+        <div class="info-item time"><div><small>丢失时间</small><strong>${escapeHtml(displayDate)}</strong></div></div>
         <div class="info-item place"><span class="place-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span><div><small>可能地点</small><strong>${item.location}</strong></div></div>
       </section>
       <section class="publisher-card">
-        <span class="publisher-avatar">${escapeHtml(publisherName.slice(0, 1))}</span>
+        ${publisherAvatarMarkup}
         <div class="publisher-info"><strong>${escapeHtml(publisherName)}</strong><p class="publisher-contact"><span id="contact-value">${escapeHtml(contactText)}</span><button class="copy-contact" id="copy-contact" type="button" aria-label="复制联系方式"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0 2 2v8a2 2 0 0 0 2 2h2"/></svg><span>复制</span></button></p></div>
-        <time>12分钟前</time>
       </section>
     </article>`;
 

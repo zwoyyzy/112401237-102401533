@@ -34,8 +34,10 @@
     const homeCategory = isHomePage ? new URLSearchParams(window.location.search).get("category") || "all" : "";
     const homeReturnParams = isHomePage ? `&from=home&category=${encodeURIComponent(homeCategory)}` : "";
     const firstImage = Array.isArray(item.images) && item.images.length ? item.images[0] : "";
-    const thumbContent = firstImage
-      ? `<img class="item-thumb-image" src="${escapeHtml(firstImage)}" alt="${escapeHtml(item.name)}图片">`
+    const firstImageUrl = CampusData.getImageUrl(firstImage);
+    const displayDate = CampusData.formatItemDate(item);
+    const thumbContent = firstImageUrl
+      ? `<img class="item-thumb-image" src="${escapeHtml(firstImageUrl)}" alt="${escapeHtml(item.name)}图片">`
       : `<span class="item-emoji default-item-placeholder" aria-hidden="true">${defaultItemIconSvg()}</span>`;
     return `
       <article class="item-card">
@@ -50,7 +52,7 @@
               <span class="item-type-inline ${item.type}">${CampusData.getTypeLabel(item.type)}</span>
             </div>
             <div class="item-meta">
-              <span>${item.date}</span>
+              <span>${escapeHtml(displayDate)}</span>
               <span>${item.location}</span>
             </div>
             <div class="item-footer">
