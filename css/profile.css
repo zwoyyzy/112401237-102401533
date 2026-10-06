@@ -222,6 +222,14 @@
   stroke-width: 1.8;
 }
 
+.profile-page .post-icon .default-item-cube,
+.my-posts-page .post-icon .default-item-cube {
+  width: 36px;
+  height: 36px;
+  color: var(--ui-blue);
+  stroke-width: 2.2;
+}
+
 .profile-page .post-icon-image,
 .my-posts-page .post-icon-image {
   display: block;

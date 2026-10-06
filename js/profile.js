@@ -72,7 +72,7 @@
     var firstImage = Array.isArray(item.images) && item.images.length ? item.images[0] : "";
     var visual = firstImage
       ? "<img class=\"post-icon-image\" src=\"" + escapeHtml(firstImage) + "\" alt=\"" + escapeHtml(item.name) + "图片\">"
-      : "<svg viewBox=\"0 0 24 24\"><path d=\"M5 4h14v16H5zM8 8h8M8 12h6M8 16h4\"/></svg>";
+      : "<svg class=\"default-item-cube\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><path d=\"m24 6 16 9-16 9-16-9 16-9Z\"/><path d=\"M8 15v18l16 9 16-9V15\"/><path d=\"M24 24v18\"/></svg>";
     return "<article class=\"post-card\"><a class=\"post-detail-link\" href=\"" + detailHref + "\"><div class=\"post-icon " + escapeHtml(item.imageClass || "icon-blue") + "\" aria-hidden=\"true\">" + visual + "</div><div class=\"post-copy\"><div class=\"post-meta\"><span>" + typeLabel(item) + "</span><strong class=\"" + statusClass + "\">" + statusLabel(item) + "</strong></div><h3>" + escapeHtml(item.name) + "</h3><p>" + escapeHtml(item.date) + " · " + escapeHtml(item.location) + "</p></div></a>" + action + "</article>";
   }
 
