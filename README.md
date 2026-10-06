@@ -86,8 +86,7 @@ python -m http.server 4179
 │   ├── browse-history.html            # 浏览记录
 │   └── contact.html                   # 个人信息
 ├── member-b-module-spec.md            # 成员 B 模块说明
-├── 共同编写原型设计作业博客.md       # 项目博客材料
-└── README.md                          # 项目运行与使用说明
+└── 共同编写原型设计作业博客.md       # 项目博客材料
 ```
 
 `js/data.js` 是各页面共用的数据入口。页面通过 `window.CampusData` 读写 `campus-lost-found-items`、个人资料、收藏和浏览记录，不在各个页面中重复维护物品数据。“我的发布”已经整合在 `profile.html`，项目中没有单独的 `my-posts.html`。
