@@ -16,22 +16,22 @@
       <p class="contact-intro">修改后会同步到“我的”页面，并作为后续发布信息的默认资料。</p>
       <form class="contact-form" id="contact-form">
         <label for="profile-name">用户名</label>
-        <input id="profile-name" name="name" type="text" maxlength="40" placeholder="例如：林同学" required>
+        <input id="profile-name" name="name" type="text" maxlength="40" placeholder="例如：小同学" required>
         <label for="profile-university">大学</label>
         <input id="profile-university" name="university" type="text" maxlength="80" placeholder="例如：福州大学" required>
         <label for="profile-college">学院</label>
-        <input id="profile-college" name="college" type="text" maxlength="80" placeholder="例如：信息学院" required>
+        <input id="profile-college" name="college" type="text" maxlength="80" placeholder="例如：计算机与大数据学院" required>
         <label for="profile-grade">年级</label>
         <input id="profile-grade" name="grade" type="text" maxlength="30" placeholder="例如：2024级" required>
-        <label for="profile-contact">联系方式</label>
-        <input id="profile-contact" name="contact" type="text" maxlength="80" placeholder="例如：微信号或手机号" required>
+        <label for="profile-contact">联系方式（电话）</label>
+        <input id="profile-contact" name="contact" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" pattern="1[3-9][0-9]{9}" placeholder="请输入11位手机号" required>
         <p class="form-message" data-contact-message role="status"></p>
         <button class="primary-button" type="submit">保存个人信息</button>
       </form>
     </main>
     <nav class="app-bottom-nav" aria-label="底部导航"><a class="bottom-nav-link" href="../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg>首页</a><a class="bottom-nav-link publish-nav" href="./publish.html"><span class="nav-plus" aria-hidden="true">＋</span>发布</a><a class="bottom-nav-link active" href="./profile.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>我的</a></nav>
   </div>
-  <script src="../js/data.js"></script>
-  <script src="../js/contact.js"></script>
+  <script src="../js/data.js?v=12"></script>
+  <script src="../js/contact.js?v=6"></script>
 </body>
 </html>

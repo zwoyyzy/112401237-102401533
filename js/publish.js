@@ -3,6 +3,7 @@
 
   var USER_ID = "current-user";
   var PROFILE_KEY = "campus-lost-found-profile";
+  var DEFAULT_PHONE = "15915331237";
   var ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
   var LOCATION_GROUPS = [
     { label: "图书馆", items: [] },
@@ -16,11 +17,12 @@
   ];
 
   function readCurrentProfile() {
-    var profile = { name: "林同学", contact: "" };
+    var profile = { name: "小同学", contact: DEFAULT_PHONE };
     try {
       var saved = JSON.parse(window.localStorage.getItem(PROFILE_KEY) || "{}");
       if (saved && typeof saved === "object") profile = Object.assign(profile, saved);
-      if (!profile.contact) profile.contact = window.localStorage.getItem("campus-lost-found-contact") || "";
+      if (!profile.contact) profile.contact = window.localStorage.getItem("campus-lost-found-contact") || DEFAULT_PHONE;
+      if (!window.CampusData || !CampusData.isValidPhone(profile.contact)) profile.contact = DEFAULT_PHONE;
     } catch (error) {
       // Use the default profile when localStorage is unavailable.
     }
@@ -62,7 +64,9 @@
     else if (String(data.get("date")) > today()) errors.date = "日期不能晚于今天";
     if (!String(data.get("location") || "").trim()) errors.location = "请选择校内地点";
     if (!String(data.get("locationDetail") || "").trim()) errors.locationDetail = "请填写具体位置";
-    if (!String(data.get("contact") || "").trim()) errors.contact = "请填写联系方式";
+    var contact = String(data.get("contact") || "").trim();
+    if (!contact) errors.contact = "请填写手机号码";
+    else if (!window.CampusData || !CampusData.isValidPhone(contact)) errors.contact = "请输入正确的11位手机号";
     return errors;
   }
 
@@ -162,14 +166,6 @@
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") closeMenu();
     });
-  }
-
-  function formatDate(dateValue) {
-    var date = new Date(dateValue + "T00:00:00");
-    if (Number.isNaN(date.getTime())) return dateValue;
-    var now = new Date();
-    if (dateValue === today()) return "今天 " + String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
-    return (date.getMonth() + 1) + "月" + date.getDate() + "日";
   }
 
   function initImageUpload(form) {
@@ -275,7 +271,7 @@
       category: String(data.get("category") || "").trim(),
       location: String(data.get("location") || "").trim(),
       locationDetail: String(data.get("locationDetail") || "").trim(),
-      dateLabel: formatDate(data.get("date")),
+      createdAt: CampusData.toShanghaiTimestamp(data.get("date")),
       description: String(data.get("description") || "").trim(),
       contact: String(data.get("contact") || "").trim(),
       publisher: readCurrentProfile().name,

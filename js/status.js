@@ -21,7 +21,7 @@
       form.hidden = true;
       return;
     }
-    box.innerHTML = "<h2>" + escapeHtml(item.name) + "</h2><p>" + escapeHtml(item.location) + " · " + escapeHtml(item.date) + "</p><span>" + escapeHtml(CampusData.getStatusLabel(item)) + "</span>";
+    box.innerHTML = "<h2>" + escapeHtml(item.name) + "</h2><p>" + escapeHtml(item.location) + " · " + escapeHtml(CampusData.formatItemDate(item)) + "</p><span>" + escapeHtml(CampusData.getStatusLabel(item)) + "</span>";
     if (item.type === "lost") {
       activeLabel.textContent = "未找到";
       completeLabel.textContent = "已找到";

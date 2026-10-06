@@ -54,7 +54,7 @@
 .info-item small { color: #8290a8; display: block; font-size: 12px; margin-bottom: 4px; }
 .info-item strong { color: #17213a; display: block; font-size: 15px; }
 .publisher-card { align-items: center; background: #fff; border-radius: 19px; display: flex; gap: 12px; padding: 14px 16px; }
-.publisher-avatar { align-items: center; background: #eaf0ff; border-radius: 50%; color: #315bd8; display: flex; font-size: 25px; height: 49px; justify-content: center; width: 49px; }
+.publisher-avatar { align-items: center; background: #eaf0ff; border-radius: 50%; color: #315bd8; display: flex; flex: 0 0 49px; font-size: 25px; height: 49px; justify-content: center; object-fit: cover; overflow: hidden; width: 49px; }
 .publisher-info { flex: 1; min-width: 0; }
 .publisher-card strong { color: #17213a; display: block; font-size: 16px; }
 .publisher-card p { color: #8290a8; font-size: 14px; margin: 5px 0 0; }
@@ -63,7 +63,6 @@
 .copy-contact { align-items: center; background: #edf1ff; border: 1px solid #dce5ff; border-radius: 8px; color: #315bd8; display: inline-flex; flex: 0 0 auto; font-size: 12px; gap: 4px; height: 28px; justify-content: center; padding: 0 8px; }
 .copy-contact svg { fill: none; height: 15px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; width: 15px; }
 .copy-contact:hover { background: #e2eaff; }
-.publisher-card time { color: #a1adbe; font-size: 12px; }
 .toast { background: rgba(23, 33, 58, .94); border-radius: 999px; bottom: 24px; box-shadow: 0 8px 24px rgba(23, 33, 58, .2); color: #fff; font-size: 13px; left: 50%; line-height: 1.4; max-width: calc(100% - 40px); padding: 10px 16px; position: fixed; text-align: center; transform: translateX(-50%); z-index: 50; }
 .hidden { display: none !important; }
 

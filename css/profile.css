@@ -55,6 +55,7 @@
   place-items: center;
   width: 70px;
   height: 70px;
+  object-fit: cover;
   border-radius: 50%;
   color: var(--ui-blue);
   background: var(--ui-blue-soft);
