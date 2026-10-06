@@ -1,19 +1,120 @@
-# 成员 102401533（B） 模块
+# 校园失物招领系统
 
-成员 B 的页面、脚本和专属样式已经按 `member-b-module-spec.md` 接入主项目结构。
+这是一个面向校园用户的静态 Web 失物招领系统。项目使用原生 HTML、CSS 和 JavaScript 编写，支持失物和招领信息的发布、浏览、搜索、筛选、详情查看、收藏、状态修改，以及“我的”页面中的个人资料和本人发布管理。
 
-成员 B 文件：
+## 运行环境
 
-- `pages/publish.html`
-- `pages/publish-success.html`
-- `pages/profile.html`
-- `pages/status.html`
-- `css/publish.css`
-- `css/profile.css`
-- `js/publish.js`
-- `js/profile.js`
-- `js/status.js`
+- 推荐使用 Google Chrome；
+- 项目不需要后端服务、数据库或第三方账号；
+- 项目没有额外的运行依赖，解压后即可打开；
+- 数据保存在浏览器当前站点的 `localStorage` 中。
 
-这些文件依赖队友主项目提供的 `js/data.js`、`css/common.css` 和 `css/design-system.css`，统一通过 `window.CampusData` 读写 `campus-lost-found-items`，不创建第二套数据存储。
-## 软工第一次结对作业预告
-之后，我们将在这里开展小程序原型的结对编程，共同完成代码实现与功能优化。
+## 使用说明（测试人员）
+
+助教或其他测试人员可以通过 GitHub 的 `Code → Download ZIP` 下载项目，也可以使用 Git 克隆仓库。下载后进入最外层项目目录，找到同时包含 `index.html`、`assets/`、`css/`、`js/` 和 `pages/` 的目录，这个目录就是项目根目录。不同下载方式可能产生不同的文件夹名称，但不影响运行。
+
+项目没有额外的账号、数据库或构建步骤。测试人员只需要从项目根目录打开网页即可。
+
+### 方案一：直接打开网页
+
+这是最简单的运行方式，不需要端口，也不需要打开 PowerShell。
+
+1. 解压从 GitHub 下载的 ZIP 文件；
+2. 进入包含 `index.html` 的项目根目录；
+3. 双击根目录下的 `index.html`；
+4. 浏览器打开首页后即可按照下方测试流程操作。
+
+### 方案二：使用本地端口
+
+如果浏览器对 `file://` 页面限制较严格，可以使用 Python 启动本地静态服务器。进入包含 `index.html` 的目录，在 PowerShell 执行：
+
+```powershell
+py -m http.server 4179
+```
+
+然后访问：
+
+```text
+http://127.0.0.1:4179/index.html
+```
+
+如果系统无法识别 `py`，可以改用：
+
+```powershell
+python -m http.server 4179
+```
+
+若端口 `4179` 已被占用，可以换成 `4180` 等端口，并同步修改访问地址。修改代码后按 `Ctrl + F5` 刷新页面。
+
+## 目录说明
+
+```text
+112401237-102401533-main/
+├── index.html                         # 首页入口
+├── assets/                            # 首页图片、校园地图、头像和示例物品图片
+│   └── seed-items/                    # 示例物品图片
+├── css/                               # 页面样式
+│   ├── common.css                     # 公共布局和底部导航
+│   ├── design-system.css              # 公共颜色、字体和设计变量
+│   ├── detail.css                     # 详情页样式
+│   ├── home.css                       # 首页样式
+│   ├── profile.css                    # “我的”及记录页面样式
+│   ├── publish.css                    # 发布、编辑和发布成功页样式
+│   └── search.css                     # 搜索页样式
+├── js/                                # 页面脚本和公共数据接口
+│   ├── data.js                        # 物品数据、个人资料和 LocalStorage 接口
+│   ├── card.js                        # 通用物品卡片
+│   ├── home.js                        # 首页分类浏览
+│   ├── search.js                      # 搜索、筛选和排序
+│   ├── detail.js                      # 详情、收藏、复制和浏览记录
+│   ├── publish.js                     # 发布表单、图片和地点选择
+│   ├── profile.js                     # “我的”页面和删除功能
+│   ├── edit-post.js                   # 编辑本人发布的信息
+│   ├── status.js                      # 修改信息状态
+│   ├── contact.js                     # 编辑个人资料
+│   └── browse-history.js              # 浏览记录页面
+├── pages/                             # 二级页面
+│   ├── search.html                    # 搜索与筛选
+│   ├── detail.html                    # 信息详情
+│   ├── publish.html                   # 发布信息
+│   ├── publish-success.html           # 发布成功
+│   ├── profile.html                   # “我的”与“我的发布”
+│   ├── edit-post.html                 # 编辑本人发布
+│   ├── status.html                    # 修改状态
+│   ├── favorites.html                 # 我的收藏
+│   ├── return-history.html            # 归还记录
+│   ├── browse-history.html            # 浏览记录
+│   └── contact.html                   # 个人信息
+├── member-b-module-spec.md            # 成员 B 模块说明
+├── 共同编写原型设计作业博客.md       # 项目博客材料
+└── README.md                          # 项目运行与使用说明
+```
+
+`js/data.js` 是各页面共用的数据入口。页面通过 `window.CampusData` 读写 `campus-lost-found-items`、个人资料、收藏和浏览记录，不在各个页面中重复维护物品数据。“我的发布”已经整合在 `profile.html`，项目中没有单独的 `my-posts.html`。
+
+## 功能复现步骤
+
+1. 打开首页，切换“全部、寻物、招领”，再选择不同物品分类；
+2. 进入搜索页，输入关键词，测试时间、类型、状态、地点和排序筛选；
+3. 点击任意信息进入详情页，检查图片、特征描述、时间、地点、发布者和联系方式；
+4. 点击底部“发布”，选择寻物或招领，填写物品名称、分类、描述、日期、地点、具体位置和联系方式；
+5. 在图片区域上传图片，也可以删除已选图片后重新选择；不上传图片时，系统显示默认蓝色正方体图标；
+6. 发布成功后进入详情页，确认刚发布的信息能够正常显示；
+7. 进入“我的”页面，测试“编辑”“修改状态”和“删除”；
+8. 在“个人信息”中修改用户名、大学、学院、年级和联系方式，保存后检查个人中心和本人发布信息是否同步；
+9. 测试“我的收藏”“浏览记录”和“归还记录”；
+10. 刷新浏览器，确认已发布信息和个人资料仍然存在。
+
+## 数据重置
+
+项目数据保存在当前浏览器站点的 `localStorage` 中。若需要重新开始测试，可以在 Chrome 开发者工具中打开：
+
+```text
+Application → Local Storage → 当前项目地址 → Clear
+```
+
+清除后刷新页面，系统会重新加载默认示例数据。上传图片建议使用较小的 JPG、PNG 或 WebP 文件，避免超过浏览器本地存储容量。
+
+## 说明
+
+本项目是静态网页，网页运行不需要安装 npm 或其他第三方框架。若运行过程中遇到浏览器兼容、页面无法打开或数据异常，可以先确认打开的是项目根目录下的 `index.html`，再尝试使用方案二启动本地端口。
