@@ -10,16 +10,29 @@
   const categoryScrollCue = document.querySelector(".category-scroll-cue");
   const heroSearch = document.querySelector(".hero-search");
   const heroSearchInput = heroSearch?.querySelector("input");
-  let currentFilter = "all";
-  const requestedCategory = new URLSearchParams(window.location.search).get("category");
+  const homeParams = new URLSearchParams(window.location.search);
+  const requestedType = homeParams.get("type");
+  const availableTypes = new Set([...segments].map(button => button.dataset.homeFilter));
+  let currentFilter = availableTypes.has(requestedType) ? requestedType : "all";
+  const requestedCategory = homeParams.get("category");
   const availableCategories = new Set([...categoryFilters].map(button => button.dataset.homeCategory));
   let currentCategory = availableCategories.has(requestedCategory) ? requestedCategory : "all";
 
-  function syncCategoryUrl() {
+  function syncFilterUrl() {
     const url = new URL(window.location.href);
+    if (currentFilter === "all") url.searchParams.delete("type");
+    else url.searchParams.set("type", currentFilter);
     if (currentCategory === "all") url.searchParams.delete("category");
     else url.searchParams.set("category", currentCategory);
     window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  }
+
+  function updateTypeSelection() {
+    segments.forEach(segment => {
+      const active = segment.dataset.homeFilter === currentFilter;
+      segment.classList.toggle("active", active);
+      segment.setAttribute("aria-selected", String(active));
+    });
   }
 
   function updateCategorySelection() {
@@ -63,18 +76,15 @@
 
   segments.forEach(button => button.addEventListener("click", () => {
     currentFilter = button.dataset.homeFilter;
-    segments.forEach(segment => {
-      const active = segment === button;
-      segment.classList.toggle("active", active);
-      segment.setAttribute("aria-selected", String(active));
-    });
+    updateTypeSelection();
+    syncFilterUrl();
     render();
   }));
 
   categoryFilters.forEach(button => button.addEventListener("click", () => {
     currentCategory = button.dataset.homeCategory || "all";
     updateCategorySelection();
-    syncCategoryUrl();
+    syncFilterUrl();
     render();
   }));
 
@@ -104,6 +114,7 @@
     window.location.href = target.href;
   });
 
+  updateTypeSelection();
   updateCategorySelection();
   render();
 })();

@@ -31,8 +31,9 @@
     const statusClass = item.status === "completed" ? "completed" : "active";
     const detailPath = window.location.pathname.includes("/pages/") ? "./detail.html" : "./pages/detail.html";
     const isHomePage = window.location.pathname.endsWith("/index.html") || window.location.pathname.endsWith("/");
-    const homeCategory = isHomePage ? new URLSearchParams(window.location.search).get("category") || "all" : "";
-    const homeReturnParams = isHomePage ? `&from=home&category=${encodeURIComponent(homeCategory)}` : "";
+    const isSearchPage = window.location.pathname.endsWith("/search.html");
+    const homeReturnParams = isHomePage ? `&from=home&return=${encodeURIComponent(window.location.href)}` : "";
+    const searchReturnParams = isSearchPage ? `&from=search&return=${encodeURIComponent(window.location.href)}` : "";
     const firstImage = Array.isArray(item.images) && item.images.length ? item.images[0] : "";
     const firstImageUrl = CampusData.getImageUrl(firstImage);
     const displayDate = CampusData.formatItemDate(item);
@@ -41,7 +42,7 @@
       : `<span class="item-emoji default-item-placeholder" aria-hidden="true">${defaultItemIconSvg()}</span>`;
     return `
       <article class="item-card">
-        <a class="item-card-link" href="${detailPath}?id=${encodeURIComponent(item.id)}${homeReturnParams}">
+        <a class="item-card-link" href="${detailPath}?id=${encodeURIComponent(item.id)}${homeReturnParams}${searchReturnParams}">
           <div class="item-thumb ${item.imageClass}">
             <span class="item-type ${item.type}">${CampusData.getTypeLabel(item.type)}</span>
             ${thumbContent}
