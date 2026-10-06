@@ -42,11 +42,20 @@
   }
 
   function render() {
-    const items = CampusData.readItems().filter(item => {
-      const matchesType = currentFilter === "all" || item.type === currentFilter;
-      const matchesCategory = currentCategory === "all" || item.category === currentCategory;
-      return matchesType && matchesCategory;
-    });
+    const items = CampusData.readItems()
+      .map((item, index) => ({ item, index, day: CampusData.getItemDayTimestamp(item) }))
+      .filter(entry => {
+        const matchesType = currentFilter === "all" || entry.item.type === currentFilter;
+        const matchesCategory = currentCategory === "all" || entry.item.category === currentCategory;
+        return matchesType && matchesCategory;
+      })
+      .sort((first, second) => {
+        if (Number.isFinite(first.day) && Number.isFinite(second.day) && first.day !== second.day) return second.day - first.day;
+        if (Number.isFinite(first.day) && !Number.isFinite(second.day)) return -1;
+        if (!Number.isFinite(first.day) && Number.isFinite(second.day)) return 1;
+        return first.index - second.index;
+      })
+      .map(entry => entry.item);
     grid.innerHTML = items.map(CampusCard.itemCard).join("");
     empty.classList.toggle("hidden", items.length > 0);
     count.textContent = `${items.length} 条信息`;
