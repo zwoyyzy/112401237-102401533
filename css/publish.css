@@ -600,6 +600,36 @@
   border: 0;
 }
 
+.edit-page .page-title-bar {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 34px;
+  margin-bottom: 20px;
+}
+
+.edit-page .page-title-bar .page-back {
+  align-self: center;
+  margin: 0;
+  line-height: 0;
+  transform: translateY(3px);
+}
+
+.edit-page .page-title-bar h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 34px;
+  transform: translateY(2px);
+}
+
+.edit-page .page-title-bar .page-back-icon svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
 @media (max-width: 360px) {
   .publish-page .field-grid {
     grid-template-columns: 1fr;

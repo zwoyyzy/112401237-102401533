@@ -507,7 +507,8 @@
   margin-bottom: 14px;
 }
 
-.browse-history-page .profile-section-heading span {
+.browse-history-page .profile-section-heading span,
+.my-posts-page .profile-count-row span {
   color: var(--ui-muted);
   font-size: 13px;
 }
@@ -687,4 +688,60 @@
   min-height: 20px;
   color: var(--ui-orange);
   font-size: 13px;
+}
+
+.my-posts-page .page-title-bar,
+.browse-history-page .page-title-bar,
+.contact-page .page-title-bar,
+.status-page .page-title-bar {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 34px;
+  margin-bottom: 14px;
+}
+
+.my-posts-page .page-title-bar .page-back,
+.browse-history-page .page-title-bar .page-back,
+.contact-page .page-title-bar .page-back,
+.status-page .page-title-bar .page-back {
+  align-self: center;
+  margin: 0;
+  line-height: 0;
+  transform: translateY(3px);
+}
+
+.my-posts-page .page-title-bar h1,
+.browse-history-page .page-title-bar h1,
+.contact-page .page-title-bar h1,
+.status-page .page-title-bar h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 34px;
+}
+
+.my-posts-page .page-title-bar .page-back-icon svg,
+.browse-history-page .page-title-bar .page-back-icon svg,
+.contact-page .page-title-bar .page-back-icon svg,
+.status-page .page-title-bar .page-back-icon svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.my-posts-page .profile-count-row,
+.browse-history-page .profile-count-row {
+  justify-content: flex-end;
+}
+
+.browse-history-page .page-title-bar,
+.contact-page .page-title-bar {
+  transform: none;
+}
+
+.browse-history-page .page-title-bar h1,
+.contact-page .page-title-bar h1 {
+  transform: translateY(2px);
 }
