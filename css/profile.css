@@ -28,6 +28,7 @@
 }
 
 .profile-page {
+  padding: 16px 16px;
   background-color: #f5f9fd;
   background-image:
     linear-gradient(
@@ -47,7 +48,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .profile-page .profile-avatar {
@@ -80,8 +81,8 @@
 .profile-page .profile-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin-bottom: 24px;
-  padding: 18px 8px;
+  margin-bottom: 16px;
+  padding: 14px 8px;
   border-radius: var(--ui-radius);
   background: var(--ui-card, #fff);
 }
@@ -107,14 +108,14 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
-  margin-bottom: 26px;
+  margin-bottom: 18px;
 }
 
 .profile-page .profile-shortcuts a {
   display: grid;
   justify-items: center;
   gap: 6px;
-  min-height: 105px;
+  min-height: 92px;
   padding: 13px 3px;
   border-radius: var(--ui-radius);
   color: var(--ui-ink);
@@ -150,6 +151,10 @@
   margin-bottom: 14px;
 }
 
+.profile-page .profile-section-heading {
+  margin-bottom: 10px;
+}
+
 .profile-page .profile-section-heading h1,
 .profile-page .profile-section-heading h2,
 .my-posts-page .profile-section-heading h1 {
@@ -169,6 +174,10 @@
 .my-posts-page .profile-list {
   display: grid;
   gap: 12px;
+}
+
+.profile-page .profile-list {
+  gap: 8px;
 }
 
 .profile-page .post-card,

@@ -4,7 +4,7 @@
   const PROFILE_STORAGE_KEY = "campus-lost-found-profile";
   const VIEWED_ITEMS_STORAGE_KEY = "campus-lost-found-viewed-items";
   const FAVORITES_STORAGE_KEY = "campus-lost-found-favorites";
-  const DEFAULT_MY_POSTS_VERSION = 1;
+  const DEFAULT_MY_POSTS_VERSION = 2;
   const DEFAULT_ACTIVITY_VERSION = 1;
   const PHONE_REGEX = /^1[3-9]\d{9}$/;
   const itemCategories = ["证件", "数码", "钥匙", "生活用品", "书籍", "其他"];
@@ -50,9 +50,16 @@
   const defaultMyItems = [
     { id: "item-default-water-bottle", type: "lost", name: "水杯", category: "生活用品", location: "京元", locationDetail: "一楼靠窗餐桌", description: "白色小米保温杯，杯身细长，正面底部有米家标志，可能遗落在用餐区靠窗座位旁。", contact: "15915331237", images: [`${SEED_IMAGE_PREFIX}my-water-bottle.jpg`], imageClass: "icon-blue", status: "active", publisher: "小同学", publisherId: "current-user", views: 12, createdAt: "2026-10-04T14:24:00+08:00" },
     { id: "item-default-bead-keychain", type: "found", name: "拼豆挂件", category: "其他", location: "青春广场", locationDetail: "东侧长椅附近", description: "捡到一个蓝白配色的行字挂件，配有浅蓝色串珠挂绳，目前由本人妥善保管。", contact: "15915331237", images: [`${SEED_IMAGE_PREFIX}my-bead-keychain.jpg`], imageClass: "icon-blue", status: "active", publisher: "小同学", publisherId: "current-user", views: 8, createdAt: "2026-10-03T17:35:00+08:00" },
-    { id: "item-default-earphones", type: "found", name: "耳机", category: "数码", location: "图书馆", locationDetail: "二楼自习区", description: "在图书馆二楼座位下捡到一副白色有线耳机，已与失主核对插头和线控特征并完成归还。", contact: "15915331237", images: [], imageClass: "icon-blue", status: "completed", publisher: "小同学", publisherId: "current-user", views: 21, createdAt: "2026-09-28T11:20:00+08:00" }
+    { id: "item-default-earphones", type: "found", name: "耳机", category: "数码", location: "图书馆", locationDetail: "二楼自习区", description: "在图书馆二楼座位下捡到一副白色有线耳机，已与失主核对插头和线控特征并完成归还。", contact: "15915331237", images: [], imageClass: "icon-blue", status: "completed", publisher: "小同学", publisherId: "current-user", views: 21, createdAt: "2026-09-28T11:20:00+08:00" },
+    { id: "item-default-black-cap", type: "lost", name: "帽子", category: "生活用品", location: "青春广场", locationDetail: "西侧步道长椅附近", description: "黑色棒球帽，帽身正面靠右位置有白色英文签名字样，帽檐较长，可能在晚间经过青春广场时遗失。", contact: "15915331237", images: [`${SEED_IMAGE_PREFIX}my-black-cap.jpg`], imageClass: "icon-blue", status: "completed", publisher: "小同学", publisherId: "current-user", views: 17, createdAt: "2026-09-18T20:10:00+08:00" }
   ];
   const DEFAULT_MY_ITEM_IDS = new Set(defaultMyItems.map(item => item.id));
+  const DEFAULT_MY_ITEM_VERSIONS = {
+    "item-default-water-bottle": 1,
+    "item-default-bead-keychain": 1,
+    "item-default-earphones": 1,
+    "item-default-black-cap": 2
+  };
 
   // The project has no account system yet, so localStorage represents one browser user.
   let memoryItems = null;
@@ -191,21 +198,22 @@
     return Number.NaN;
   }
 
+  function getItemDayTimestamp(item, nowValue) {
+    const itemTime = getItemTimestamp(item, nowValue);
+    if (!Number.isFinite(itemTime)) return Number.NaN;
+    const parts = getShanghaiParts(itemTime);
+    if (!parts) return Number.NaN;
+    return Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day));
+  }
+
   function formatItemDate(item, nowValue) {
     const fallback = String(item && item.date || "").trim();
-    const itemTime = getItemTimestamp({ createdAt: item && item.createdAt });
+    const itemTime = getItemTimestamp(item, nowValue);
     if (!Number.isFinite(itemTime)) return fallback;
 
     const itemParts = getShanghaiParts(itemTime);
-    const nowParts = getShanghaiParts(nowValue || new Date());
-    if (!itemParts || !nowParts) return fallback;
-    const itemDay = Date.UTC(Number(itemParts.year), Number(itemParts.month) - 1, Number(itemParts.day));
-    const nowDay = Date.UTC(Number(nowParts.year), Number(nowParts.month) - 1, Number(nowParts.day));
-    const dayDifference = Math.round((nowDay - itemDay) / 86400000);
-    const time = `${itemParts.hour}:${itemParts.minute}`;
-    if (dayDifference === 0) return `今天 ${time}`;
-    if (dayDifference === 1) return `昨天 ${time}`;
-    return `${Number(itemParts.month)}月${Number(itemParts.day)}日 ${time}`;
+    if (!itemParts) return fallback;
+    return `${Number(itemParts.month)}月${Number(itemParts.day)}日`;
   }
 
   function getTimeRangeStart(range, nowValue) {
@@ -232,11 +240,13 @@
 
   function matchesTimeRange(item, range, nowValue) {
     if (range === "all") return true;
-    const itemTime = getItemTimestamp(item, nowValue);
+    const itemDay = getItemDayTimestamp(item, nowValue);
     const now = new Date(nowValue || Date.now());
+    if (Number.isNaN(now.getTime())) return false;
     const start = getTimeRangeStart(range, now);
-    if (!Number.isFinite(itemTime) || !start || Number.isNaN(now.getTime())) return false;
-    return itemTime >= start.getTime() && itemTime <= now.getTime();
+    const nowDay = getItemDayTimestamp({ createdAt: now.toISOString() }, now);
+    if (!Number.isFinite(itemDay) || !start || !Number.isFinite(nowDay)) return false;
+    return itemDay >= start.getTime() && itemDay <= nowDay;
   }
 
   function normalizeImages(images, allowSeedImages) {
@@ -334,9 +344,12 @@
         const storedItems = JSON.parse(saved).map(normalizeItem);
         const storedById = new Map(storedItems.map(item => [item.id, item]));
         const retainedItems = storedItems.filter(item => !LEGACY_SEED_ITEM_IDS.has(item.id) && !SEED_ITEM_IDS.has(item.id));
-        const needsDefaultMyItems = readDefaultMyPostsVersion() < DEFAULT_MY_POSTS_VERSION;
+        const currentDefaultMyPostsVersion = readDefaultMyPostsVersion();
+        const needsDefaultMyItems = currentDefaultMyPostsVersion < DEFAULT_MY_POSTS_VERSION;
         const missingDefaultMyItems = needsDefaultMyItems
-          ? defaultMyItems.filter(item => !storedById.has(item.id)).map(normalizeItem)
+          ? defaultMyItems
+            .filter(item => DEFAULT_MY_ITEM_VERSIONS[item.id] > currentDefaultMyPostsVersion && !storedById.has(item.id))
+            .map(normalizeItem)
           : [];
         const refreshedSeeds = seedItems.map(seed => {
           const storedSeed = storedById.get(seed.id);
@@ -415,7 +428,16 @@
 
   function getMyItems(publisherId) {
     const ownerId = String(publisherId || "current-user");
-    return readItems().filter(item => item.publisherId === ownerId);
+    return readItems()
+      .filter(item => item.publisherId === ownerId)
+      .map((item, index) => ({ item, index, day: getItemDayTimestamp(item) }))
+      .sort((first, second) => {
+        if (Number.isFinite(first.day) && Number.isFinite(second.day) && first.day !== second.day) return second.day - first.day;
+        if (Number.isFinite(first.day) && !Number.isFinite(second.day)) return -1;
+        if (!Number.isFinite(first.day) && Number.isFinite(second.day)) return 1;
+        return first.index - second.index;
+      })
+      .map(entry => entry.item);
   }
 
   function updateMyProfile(profile) {
@@ -618,6 +640,7 @@
     getItemById,
     getImageUrl,
     getItemTimestamp,
+    getItemDayTimestamp,
     formatItemDate,
     matchesTimeRange,
     toShanghaiTimestamp,

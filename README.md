@@ -7,7 +7,6 @@
 - `pages/publish.html`
 - `pages/publish-success.html`
 - `pages/profile.html`
-- `pages/my-posts.html`
 - `pages/status.html`
 - `css/publish.css`
 - `css/profile.css`
