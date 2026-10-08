@@ -49,7 +49,7 @@ python -m http.server 4179
 ## 目录说明
 
 ```text
-112401237-102401533-main/
+112401237-102401533/
 ├── index.html                         # 首页入口
 ├── assets/                            # 首页图片、校园地图、头像和示例物品图片
 │   └── seed-items/                    # 示例物品图片
@@ -85,6 +85,7 @@ python -m http.server 4179
 │   ├── return-history.html            # 归还记录
 │   ├── browse-history.html            # 浏览记录
 │   └── contact.html                   # 个人信息
+├── READMD.md                          # 项目说明
 └── member-b-module-spec.md            # 成员 B 模块说明
 
 ```
