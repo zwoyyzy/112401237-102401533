@@ -50,43 +50,46 @@ python -m http.server 4179
 
 ```text
 112401237-102401533/
-├── index.html                         # 首页入口
-├── assets/                            # 首页图片、校园地图、头像和示例物品图片
+├── index.html                         # 首页
+├── assets/
+│   ├── campus-map.jpg                 # 校园地图
+│   ├── default-profile-avatar.png     # 默认头像
+│   ├── home-hero.png                  # 首页顶部图片
 │   └── seed-items/                    # 示例物品图片
-├── css/                               # 页面样式
-│   ├── common.css                     # 公共布局和底部导航
-│   ├── design-system.css              # 公共颜色、字体和设计变量
+├── css/
+│   ├── common.css                     # 公共布局与底部导航
+│   ├── design-system.css              # 颜色、字体等设计变量
 │   ├── detail.css                     # 详情页样式
 │   ├── home.css                       # 首页样式
-│   ├── profile.css                    # “我的”及记录页面样式
-│   ├── publish.css                    # 发布、编辑和发布成功页样式
-│   └── search.css                     # 搜索页样式
-├── js/                                # 页面脚本和公共数据接口
-│   ├── data.js                        # 物品数据、个人资料和 LocalStorage 接口
+│   ├── profile.css                    # “我的”及关联页面样式
+│   ├── publish.css                    # 发布、编辑及发布成功页样式
+│   └── search.css                     # 搜索与筛选页样式
+├── js/
+│   ├── data.js                        # 公共数据、LocalStorage 与业务接口
 │   ├── card.js                        # 通用物品卡片
-│   ├── home.js                        # 首页分类浏览
-│   ├── search.js                      # 搜索、筛选和排序
-│   ├── detail.js                      # 详情、收藏、复制和浏览记录
-│   ├── publish.js                     # 发布表单、图片和地点选择
-│   ├── profile.js                     # “我的”页面和删除功能
-│   ├── edit-post.js                   # 编辑本人发布的信息
-│   ├── status.js                      # 修改信息状态
-│   ├── contact.js                     # 编辑个人资料
-│   └── browse-history.js              # 浏览记录页面
-├── pages/                             # 二级页面
+│   ├── home.js                        # 首页分类与列表渲染
+│   ├── search.js                      # 搜索、筛选与排序
+│   ├── detail.js                      # 详情、收藏、复制及浏览记录
+│   ├── publish.js                     # 发布表单、地点与图片处理
+│   ├── profile.js                     # 个人中心、收藏、归还及删除
+│   ├── edit-post.js                   # 本人发布信息编辑
+│   ├── status.js                      # 信息状态修改
+│   ├── contact.js                     # 个人资料编辑与同步
+│   └── browse-history.js              # 浏览记录
+├── pages/
 │   ├── search.html                    # 搜索与筛选
 │   ├── detail.html                    # 信息详情
 │   ├── publish.html                   # 发布信息
 │   ├── publish-success.html           # 发布成功
 │   ├── profile.html                   # “我的”与“我的发布”
 │   ├── edit-post.html                 # 编辑本人发布
-│   ├── status.html                    # 修改状态
+│   ├── status.html                    # 修改信息状态
 │   ├── favorites.html                 # 我的收藏
 │   ├── return-history.html            # 归还记录
 │   ├── browse-history.html            # 浏览记录
 │   └── contact.html                   # 个人信息
-├── READMD.md                          # 项目说明
-└── member-b-module-spec.md            # 成员 B 模块说明
+├── README.md                          # 模块与项目说明
+└── member-b-module-spec.md            # 成员 B 模块接口说明
 
 ```
 
